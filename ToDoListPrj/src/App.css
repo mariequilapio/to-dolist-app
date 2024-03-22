@@ -33,6 +33,7 @@
   font-family: 'Gotham Bold', sans-serif;
   font-size: 40px;
   color: #5E1B89;
+  border-radius: 10px;
 }
 
 .todo-input::placeholder {
