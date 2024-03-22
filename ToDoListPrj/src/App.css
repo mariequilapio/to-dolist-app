@@ -23,6 +23,7 @@
   padding: 20px 10%;
   width: 100%;
   background-color: #FF7F4D;
+   border-radius: 15px;
 }
 
 .todo-container .todo-header h1 {
@@ -33,7 +34,7 @@
   font-family: 'Gotham Bold', sans-serif;
   font-size: 40px;
   color: #5E1B89;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 .todo-input::placeholder {
