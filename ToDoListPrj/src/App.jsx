@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
-import HeaderImage from './components/Header'; 
+import HeaderImage from './components/Header';
+import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
 export default function App() {
     const [newItem, setNewItem] = useState("");
-    const [todos, setTodos] = useState(null); 
+    const [todos, setTodos] = useState([]);
     const [editItemId, setEditItemId] = useState(null);
-    const [editedTitle, setEditedTitle] = useState(""); 
-    
+    const [editedTitle, setEditedTitle] = useState("");
+    const [selectedDate, setSelectedDate] = useState(null); // State for selected date
+
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem('todos'));
         if (storedTodos !== null) {
@@ -18,26 +20,26 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        if (todos !== null) {
-            localStorage.setItem('todos', JSON.stringify(todos));
-        }
+        localStorage.setItem('todos', JSON.stringify(todos));
     }, [todos]);
 
     function handleSubmit(e) {
         e.preventDefault();
-        const currentDate = new Date().toLocaleString(); 
+        const currentDate = new Date().toLocaleString();
         setTodos(currentTodos => {
             return [
                 ...currentTodos,
                 {
-                    id: crypto.randomUUID(),
+                    id: Date.now(), // Use timestamp as id
                     title: newItem,
                     completed: false,
-                    datecreated: currentDate
+                    datecreated: currentDate,
+                    deadline: selectedDate ? selectedDate.toLocaleDateString() : null, // Store the selected date as deadline
                 },
             ];
         });
         setNewItem("");
+        setSelectedDate(null); // Reset selected date after adding todo
     }
 
     function toggleTodo(id, completed) {
@@ -75,7 +77,7 @@ export default function App() {
     }
 
     function handleCancelEdit() {
-        setEditItemId(null); // Reset editItemId to exit edit mode
+        setEditItemId(null);
     }
 
     function deleteAllTodos() {
@@ -99,24 +101,26 @@ export default function App() {
         }
     }
 
-    const uncheckedCount = todos !== null ? todos.filter(todo => !todo.completed).length : 0;
-    const completedCount = todos !== null ? todos.filter(todo => todo.completed).length : 0;
-    const totalCount = todos !== null ? todos.length : 0;
+    const uncheckedCount = todos.filter(todo => !todo.completed).length;
+    const completedCount = todos.filter(todo => todo.completed).length;
+    const totalCount = todos.length;
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="todo-container">
-                <HeaderImage /> {}
+                <HeaderImage />
                 <div className="todo-header">
-                    <h1>TO-DO LIST</h1>
+                    <h1>To-Do List</h1>
                     <TodoForm
                         newItem={newItem}
                         setNewItem={setNewItem}
                         handleSubmit={handleSubmit}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate} // Pass setSelectedDate to TodoForm
                         className="todo-form"
                     />
                     <div className="completed-count">
-                       Completed Task {completedCount}/{totalCount} 
+                        {completedCount}/{totalCount} have been completed
                     </div>
                 </div>
                 <TodoList
