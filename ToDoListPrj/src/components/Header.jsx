@@ -8,7 +8,7 @@ function HeaderImage() {
         className="header"
         src={header} 
         alt="Header" 
-        style={{ width: '100%', height: 'auto' }}
+           style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
       />
     </div>
   );
